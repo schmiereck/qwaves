@@ -33,13 +33,13 @@ public class Main {
 
         long runNr = 0;
         while (runNr < 180) {
-            System.out.printf("%4d:", engine.getCellPos());
+            System.out.printf("%4d:%4d:", engine.getCellPos(), runNr);
             for (int cellPos = 0; cellPos < universe.getUniverseSize(); cellPos++) {
                 final Cell cell = universe.getCell(0, 0, cellPos);
                 System.out.printf("| %2d", cell.getTickListSize());
             }
             System.out.println();
-            engine.run();
+            engine.run(true);
             runNr++;
         }
     }

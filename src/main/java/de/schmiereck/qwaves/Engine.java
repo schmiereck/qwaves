@@ -25,19 +25,24 @@ public class Engine {
         return this.tickList;
     }
 
-    public void run() {
-        final Cell cell = this.universe.getCell(0, 0, this.cellPos);
+    public void run(final boolean runAllCells) {
+        do {
+            final Cell cell = this.universe.getCell(0, 0, this.cellPos);
 
-        if (cell.haveFirstTick()) {
-            final Tick tick = cell.removeFirstTick();
+            if (cell.haveFirstTick()) {
+                final Tick tick = cell.removeFirstTick();
 
-            tick.execute();
-        }
+                tick.execute();
+            }
 
-        if ((this.cellPos + 1) < this.universe.getUniverseSize()) {
-            this.cellPos++;
-        } else {
-            this.cellPos = 0;
-        }
+            if ((this.cellPos + 1) < this.universe.getUniverseSize()) {
+                this.cellPos++;
+            } else {
+                this.cellPos = 0;
+                if (runAllCells) {
+                    break;
+                }
+            }
+        } while (runAllCells);
     }
 }
