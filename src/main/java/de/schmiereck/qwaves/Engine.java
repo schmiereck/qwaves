@@ -4,12 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Engine {
+    private final Universe universe;
     private final List<Tick> tickList = new ArrayList<>();
 
-    private int tickPos = 0;
+    private int cellPos = 0;
 
-    public int getTickPos() {
-        return tickPos;
+    public Engine(final Universe universe) {
+        this.universe = universe;
+    }
+
+    public int getCellPos() {
+        return cellPos;
     }
 
     public void addTick(final Tick tick) {
@@ -21,14 +26,18 @@ public class Engine {
     }
 
     public void run() {
-        final Tick tick = this.tickList.get(this.tickPos);
+        final Cell cell = this.universe.getCell(0, 0, this.cellPos);
 
-        tick.execute();
+        if (cell.haveFirstTick()) {
+            final Tick tick = cell.removeFirstTick();
 
-        if ((this.tickPos + 1) < this.tickList.size()) {
-            this.tickPos++;
+            tick.execute();
+        }
+
+        if ((this.cellPos + 1) < this.universe.getUniverseSize()) {
+            this.cellPos++;
         } else {
-            this.tickPos = 0;
+            this.cellPos = 0;
         }
     }
 }

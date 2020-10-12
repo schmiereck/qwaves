@@ -19,7 +19,7 @@ public class Tick {
         cellArr[0] = cell.getNextCell(0);
         cellArr[1] = cell.getNextCell(1);
 
-        this.rule.execute(this.cell, cellArr);
+        this.rule.execute(this, this.cell, cellArr);
         /*
         for (int cellPos = 0; cellPos < cellArr.length; cellPos++) {
             final List<Tick> tickList = this.cell.getTickList();
