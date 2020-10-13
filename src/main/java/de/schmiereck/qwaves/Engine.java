@@ -32,23 +32,20 @@ public class Engine {
             final Cell cell = this.universe.getCell(spaceNr, phaseShiftNr, this.cellPos);
 
             final Cell[] cellArr = new Cell[2];
-            cellArr[0] = cell.getNextCell(Cell.Dir.Left);
-            cellArr[1] = cell.getNextCell(Cell.Dir.Right);
+            cellArr[Cell.Dir.Left.ordinal()] = cell.getNextCell(Cell.Dir.Left);
+            cellArr[Cell.Dir.Right.ordinal()] = cell.getNextCell(Cell.Dir.Right);
 
-            if (cell.getWaveListSize() < cellArr[0].getWaveListSize()) {
-                final Cell nCell = this.universe.getSpaceCell(spaceNr + 1, this.cellPos, Cell.Dir.Left);
+            for (Cell.Dir dir : Cell.Dir.values()) {
+                final Cell nCell = cellArr[dir.ordinal()];
+                if (cell.getWaveListSize() < nCell.getWaveListSize()) {
+                    final Cell nsCell = this.universe.getSpaceCell(spaceNr + 1, this.cellPos, dir);
 
-                if (nCell.getWaveListSize() == 0) {
-                    nCell.addWave(new Wave(null));
+                    if (nsCell.getWaveListSize() == 0) {
+                        final Wave wave = nCell.fetchFirstWave();
+                        nsCell.addWave(new Wave(wave.getEvent()));
+                    }
                 }
             }
-/*
-            if (cell.haveFirstWave()) {
-                final Wave wave = cell.removeFirstWave();
-
-                wave.execute();
-            }
-*/
             if ((this.cellPos + 1) < this.universe.getUniverseSize()) {
                 this.cellPos++;
             } else {

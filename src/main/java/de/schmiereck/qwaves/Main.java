@@ -24,9 +24,8 @@ public class Main {
                 cell.addWave(tick);
             }
         });
-        final Event event = new Event();
-        event.addTicks(engine, leftRule, 8);
-        event.addTicks(engine, rightRule, 8);
+        final Event event = new Event(engine);
+        final Wave wave = event.createWave();
 
         universe.addEvent(0, 0, 8, event);
 

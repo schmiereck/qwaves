@@ -5,16 +5,17 @@ import java.util.List;
 
 public class Event {
     private final List<Wave> waveList = new ArrayList<>();
+    private final Engine engine;
 
-    public Event() {
+    public Event(final Engine engine) {
+        this.engine = engine;
     }
 
-    public void addTicks(final Engine engine, final Rule rule, final int ticktCount) {
-        for (int tickPos = 0; tickPos < ticktCount; tickPos++) {
-            final Wave wave = new Wave(rule);
-            this.waveList.add(wave);
-            engine.addTick(wave);
-        }
+    public Wave createWave() {
+        final Wave wave = new Wave(this);
+        this.waveList.add(wave);
+        this.engine.addTick(wave);
+        return wave;
     }
 
     public List<Wave> getTickList() {
