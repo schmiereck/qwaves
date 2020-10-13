@@ -7,7 +7,14 @@ class UniverseTest {
     @org.junit.jupiter.api.Test
     void calcPhaseShiftNr() {
         // assert
-        assertEquals(1, Universe.calcPhaseShiftNr(0, 0, Cell.Dir.Right));
+        assertEquals(0, Universe.calcPhaseShiftNr(0, 0, Cell.Dir.Right));
+        assertEquals(0, Universe.calcPhaseShiftNr(0, 1, Cell.Dir.Right));
+        assertEquals(0, Universe.calcPhaseShiftNr(0, 2, Cell.Dir.Right));
+        assertEquals(0, Universe.calcPhaseShiftNr(0, 0, Cell.Dir.Left));
+        assertEquals(0, Universe.calcPhaseShiftNr(0, 1, Cell.Dir.Left));
+        assertEquals(0, Universe.calcPhaseShiftNr(0, 2, Cell.Dir.Left));
+
+        assertEquals(0, Universe.calcPhaseShiftNr(1, 0, Cell.Dir.Right));
     }
 
     @org.junit.jupiter.api.Test

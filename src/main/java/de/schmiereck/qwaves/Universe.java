@@ -64,12 +64,13 @@ public class Universe {
 
     public static int calcPhaseShiftNr(final int spaceNr, final int cellPos, final Cell.Dir dir) {
         final int phaseShiftNr;
+        final int pos = cellPos % (spaceNr + 1);
         switch (dir) {
             case Left -> {
-                phaseShiftNr = wrap(cellPos % spaceNr - 1, spaceNr);
+                phaseShiftNr = wrap( pos - 1, spaceNr + 1);
             }
             case Right -> {
-                phaseShiftNr = wrap(cellPos % spaceNr + 1, spaceNr);
+                phaseShiftNr = wrap(pos + 1, spaceNr + 1);
             }
             default -> throw new RuntimeException(String.format("Unexcpected direction \"%s\".", dir));
         }
