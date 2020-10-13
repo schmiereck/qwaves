@@ -1,7 +1,5 @@
 package de.schmiereck.qwaves;
 
-import java.util.List;
-
 public class Main {
     public static void main(final String[] args) {
         final Universe universe = new Universe(16, 1);
@@ -10,19 +8,19 @@ public class Main {
         final Rule leftRule = new Rule((tick, cell, cellArr) -> {
             final int cellPos = 0;
             final Cell nCell = cellArr[cellPos];
-            if (nCell.getTickListSize() < cell.getTickListSize()) {
-                nCell.addTick(tick);
+            if (nCell.getWaveListSize() < cell.getWaveListSize()) {
+                nCell.addWave(tick);
             } else {
-                cell.addTick(tick);
+                cell.addWave(tick);
             }
         });
         final Rule rightRule = new Rule((tick, cell, cellArr) -> {
             final int cellPos = 1;
             final Cell nCell = cellArr[cellPos];
-            if (nCell.getTickListSize() < cell.getTickListSize()) {
-                nCell.addTick(tick);
+            if (nCell.getWaveListSize() < cell.getWaveListSize()) {
+                nCell.addWave(tick);
             } else {
-                cell.addTick(tick);
+                cell.addWave(tick);
             }
         });
         final Event event = new Event();
@@ -36,7 +34,7 @@ public class Main {
             System.out.printf("%4d:%4d:", engine.getCellPos(), runNr);
             for (int cellPos = 0; cellPos < universe.getUniverseSize(); cellPos++) {
                 final Cell cell = universe.getCell(0, 0, cellPos);
-                System.out.printf("| %2d", cell.getTickListSize());
+                System.out.printf("| %2d", cell.getWaveListSize());
             }
             System.out.println();
             engine.run(true);

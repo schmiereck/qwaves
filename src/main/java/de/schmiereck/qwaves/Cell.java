@@ -1,40 +1,42 @@
 package de.schmiereck.qwaves;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 public class Cell {
+    public enum Dir {
+        Left,
+        Right
+    };
     private Cell[] nextCellArr;
-    private final Queue<Tick> tickList = new LinkedList<>();
+    private final Queue<Wave> waveList = new LinkedList<>();
 
     public void init(final Cell[] nextCellArr) {
         this.nextCellArr = nextCellArr;
     }
 
-    public void addTick(final Tick tick) {
-        this.tickList.add(tick);
-        tick.setCell(this);
+    public void addWave(final Wave wave) {
+        this.waveList.add(wave);
+        wave.setCell(this);
     }
 
-    public int getTickListSize() {
-        return this.tickList.size();
+    public Cell getNextCell(final Dir dir) {
+        return this.nextCellArr[dir.ordinal()];
     }
 
-    public Cell getNextCell(final int cellNr) {
-        return this.nextCellArr[cellNr];
+    public int getWaveListSize() {
+        return this.waveList.size();
     }
 
-    public boolean haveFirstTick() {
-        return !this.tickList.isEmpty();
+    public boolean haveFirstWave() {
+        return !this.waveList.isEmpty();
     }
 
-    public Tick removeFirstTick() {
-        return this.tickList.remove();
+    public Wave removeFirstWave() {
+        return this.waveList.remove();
     }
 
-    public Tick fetchFirstTick() {
-        return this.tickList.peek();
+    public Wave fetchFirstWave() {
+        return this.waveList.peek();
     }
 }

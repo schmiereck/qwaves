@@ -2,11 +2,11 @@ package de.schmiereck.qwaves;
 
 import java.util.List;
 
-public class Tick {
+public class Wave {
     private final Rule rule;
     private Cell cell;
 
-    public Tick(final Rule rule) {
+    public Wave(final Rule rule) {
         this.rule = rule;
     }
 
@@ -16,8 +16,8 @@ public class Tick {
 
     public void execute() {
         final Cell[] cellArr = new Cell[2];
-        cellArr[0] = cell.getNextCell(0);
-        cellArr[1] = cell.getNextCell(1);
+        cellArr[0] = cell.getNextCell(Cell.Dir.Left);
+        cellArr[1] = cell.getNextCell(Cell.Dir.Right);
 
         this.rule.execute(this, this.cell, cellArr);
         /*

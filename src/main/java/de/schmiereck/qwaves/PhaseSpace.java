@@ -6,6 +6,11 @@ import java.util.List;
 public class PhaseSpace {
     private int spaceNr;
     private int cellSize;
+    /**
+     *  Space (Phasenraum)
+     *      Phase-List per Phase-Shift (Phase)
+     *          Cell (Zelle)
+     */
     private List<List<Cell>> shiftList = new ArrayList<>();
 
     public PhaseSpace(final int spaceNr, final int universeSize) {
@@ -38,8 +43,8 @@ public class PhaseSpace {
         return cell;
     }
 
-    public Cell getCell(final int spaceShiftNr, final int cellPos) {
-        final List<Cell> cellList = this.shiftList.get(spaceShiftNr);
+    public Cell getCell(final int phaseShiftNr, final int cellPos) {
+        final List<Cell> cellList = this.shiftList.get(phaseShiftNr);
         return cellList.get(cellPos);
     }
 }
