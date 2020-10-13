@@ -4,18 +4,52 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UniverseTest {
 
+    /**
+     3            |. . .|. . .|. . .|. . .|1 1 1|. . .|. . .|. . .|. . .|. . .|
+     3          |. . .|. . .|. . .|. . .|. . .|. . .|. . .|. . .|. . .|. . .|
+     3        |. . .|. . .|. . .|. . .|1 1 1|. . .|. . .|. . .|. . .|. . .|
+     2          |. .|. .|. .|. .|. .|. .|1 1|. .|. .|. .|. .|. .|. .|. .|
+     2        |. .|. .|. .|. .|. .|. .|. .|1 1|. .|. .|. .|. .|. .|. .|
+     1        |.|.|.|.|.|.|.|.|.|.|.|.|.|.|1|.|.|.|.|.|.|.|.|.|.|.|.|.|
+               0
+     */
     @org.junit.jupiter.api.Test
     void calcPhaseShiftNr() {
         // assert
         assertEquals(0, Universe.calcPhaseShiftNr(0, 0, Cell.Dir.Right));
-        assertEquals(0, Universe.calcPhaseShiftNr(0, 1, Cell.Dir.Right));
-        assertEquals(0, Universe.calcPhaseShiftNr(0, 2, Cell.Dir.Right));
         assertEquals(0, Universe.calcPhaseShiftNr(0, 0, Cell.Dir.Left));
+        assertEquals(0, Universe.calcPhaseShiftNr(0, 1, Cell.Dir.Right));
         assertEquals(0, Universe.calcPhaseShiftNr(0, 1, Cell.Dir.Left));
+        assertEquals(0, Universe.calcPhaseShiftNr(0, 2, Cell.Dir.Right));
         assertEquals(0, Universe.calcPhaseShiftNr(0, 2, Cell.Dir.Left));
 
         assertEquals(0, Universe.calcPhaseShiftNr(1, 0, Cell.Dir.Right));
-    }
+        assertEquals(1, Universe.calcPhaseShiftNr(1, 0, Cell.Dir.Left));
+        assertEquals(1, Universe.calcPhaseShiftNr(1, 1, Cell.Dir.Right));
+        assertEquals(0, Universe.calcPhaseShiftNr(1, 1, Cell.Dir.Left));
+        assertEquals(0, Universe.calcPhaseShiftNr(1, 2, Cell.Dir.Right));
+        assertEquals(1, Universe.calcPhaseShiftNr(1, 2, Cell.Dir.Left));
+        assertEquals(1, Universe.calcPhaseShiftNr(1, 3, Cell.Dir.Right));
+        assertEquals(0, Universe.calcPhaseShiftNr(1, 4, Cell.Dir.Right));
+        assertEquals(1, Universe.calcPhaseShiftNr(1, 4, Cell.Dir.Left));
+        assertEquals(1, Universe.calcPhaseShiftNr(1, 5, Cell.Dir.Right));
+        assertEquals(0, Universe.calcPhaseShiftNr(1, 5, Cell.Dir.Left));
+
+        assertEquals(0, Universe.calcPhaseShiftNr(2, 0, Cell.Dir.Right));
+        assertEquals(1, Universe.calcPhaseShiftNr(2, 0, Cell.Dir.Left));
+        assertEquals(0, Universe.calcPhaseShiftNr(2, 0, Cell.Dir.Right));
+        assertEquals(1, Universe.calcPhaseShiftNr(2, 0, Cell.Dir.Left));
+        assertEquals(1, Universe.calcPhaseShiftNr(2, 1, Cell.Dir.Right));
+        assertEquals(2, Universe.calcPhaseShiftNr(2, 1, Cell.Dir.Left));
+        assertEquals(2, Universe.calcPhaseShiftNr(2, 2, Cell.Dir.Right));
+        assertEquals(0, Universe.calcPhaseShiftNr(2, 2, Cell.Dir.Left));
+        assertEquals(0, Universe.calcPhaseShiftNr(2, 3, Cell.Dir.Right));
+        assertEquals(1, Universe.calcPhaseShiftNr(2, 3, Cell.Dir.Left));
+        assertEquals(1, Universe.calcPhaseShiftNr(2, 4, Cell.Dir.Right));
+        assertEquals(2, Universe.calcPhaseShiftNr(2, 4, Cell.Dir.Left));
+        assertEquals(2, Universe.calcPhaseShiftNr(2, 5, Cell.Dir.Right));
+        assertEquals(0, Universe.calcPhaseShiftNr(2, 5, Cell.Dir.Left));
+   }
 
     @org.junit.jupiter.api.Test
     void wrap() {

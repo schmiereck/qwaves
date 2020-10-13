@@ -37,14 +37,19 @@ public class Universe {
         return this.universeSize;
     }
 
+    public int getSpaceSize(final int spacePos) {
+        final PhaseSpace phaseSpace = this.spaceList.get(spacePos);
+        return phaseSpace.getSize();
+    }
+
     public void addEvent(final int spaceNr, final int spaceShiftNr, final int cellPos, final Event event) {
         final Cell cell = this.getCell(spaceNr, spaceShiftNr, cellPos);
 
         event.getTickList().forEach((tick) -> cell.addWave(tick));
     }
 
-    public Cell getCell(final int spaceNr, final int phaseShiftNr, final int cellPos) {
-        final PhaseSpace phaseSpace = this.spaceList.get(spaceNr);
+    public Cell getCell(final int spacePos, final int phaseShiftNr, final int cellPos) {
+        final PhaseSpace phaseSpace = this.spaceList.get(spacePos);
         return phaseSpace.getCell(phaseShiftNr, cellPos);
     }
 
@@ -57,7 +62,7 @@ public class Universe {
      1        |.|.|.|.|.|.|.|.|.|.|.|.|.|.|1|.|.|.|.|.|.|.|.|.|.|.|.|.|
      */
     public Cell getSpaceCell(final int spaceNr, final int cellPos, final Cell.Dir dir) {
-        final int cellNr = cellPos / spaceNr;
+        final int cellNr = cellPos / (spaceNr + 1);
         final int phaseShiftNr = calcPhaseShiftNr(spaceNr, cellPos, dir);
         return getCell(spaceNr, phaseShiftNr, cellNr);
     }
@@ -67,10 +72,10 @@ public class Universe {
         final int pos = cellPos % (spaceNr + 1);
         switch (dir) {
             case Left -> {
-                phaseShiftNr = wrap( pos - 1, spaceNr + 1);
+                phaseShiftNr = wrap( pos + 1, spaceNr + 1);
             }
             case Right -> {
-                phaseShiftNr = wrap(pos + 1, spaceNr + 1);
+                phaseShiftNr = wrap(pos, spaceNr + 1);
             }
             default -> throw new RuntimeException(String.format("Unexcpected direction \"%s\".", dir));
         }

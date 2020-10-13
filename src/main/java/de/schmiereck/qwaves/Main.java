@@ -2,7 +2,8 @@ package de.schmiereck.qwaves;
 
 public class Main {
     public static void main(final String[] args) {
-        final Universe universe = new Universe(16, 1);
+        final int spaceSize = 2;
+        final Universe universe = new Universe(16, spaceSize);
         final Engine engine = new Engine(universe);
 
         final Rule leftRule = new Rule((tick, cell, cellArr) -> {
@@ -31,12 +32,19 @@ public class Main {
 
         long runNr = 0;
         while (runNr < 180) {
-            System.out.printf("%4d:%4d:", engine.getCellPos(), runNr);
-            for (int cellPos = 0; cellPos < universe.getUniverseSize(); cellPos++) {
-                final Cell cell = universe.getCell(0, 0, cellPos);
-                System.out.printf("| %2d", cell.getWaveListSize());
+            for (int spacePos = 0; spacePos < spaceSize; spacePos++) {
+                for (int shiftPos = 0; shiftPos < spacePos + 1; shiftPos++) {
+                    System.out.printf("%2d/%2d:%4d:%4d:", spacePos, shiftPos, engine.getCellPos(), runNr);
+                    for (int p = 0; p < ((shiftPos) * 3); p++) {
+                        System.out.print(" ");
+                    }
+                    for (int cellPos = 0; cellPos < universe.getSpaceSize(spacePos); cellPos++) {
+                        final Cell cell = universe.getCell(spacePos, shiftPos, cellPos);
+                        System.out.printf("|%" + ((spacePos + 1) * 2 + (spacePos * 1)) + "d", cell.getWaveListSize());
+                    }
+                    System.out.println("|");
+                }
             }
-            System.out.println();
             engine.run(true);
             runNr++;
         }

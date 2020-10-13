@@ -5,7 +5,7 @@ import java.util.List;
 
 public class PhaseSpace {
     private int spaceNr;
-    private int cellSize;
+    private int cellCount;
     /**
      *  Space (Phasenraum)
      *      Phase-List per Phase-Shift (Phase)
@@ -14,16 +14,15 @@ public class PhaseSpace {
     private List<List<Cell>> shiftList = new ArrayList<>();
 
     public PhaseSpace(final int spaceNr, final int universeSize) {
-        this.cellSize = spaceNr;
-        this.cellSize = universeSize / this.cellSize;
-        final int cellCount = this.cellSize / spaceNr;
+        this.spaceNr = spaceNr;
+        this.cellCount = universeSize / this.spaceNr;
         for (int shiftPos = 0; shiftPos < spaceNr; shiftPos++) {
             final List<Cell> cellList = new ArrayList<Cell>();
             this.shiftList.add(cellList);
-            for (int cellPos = 0; cellPos < cellCount; cellPos++) {
+            for (int cellPos = 0; cellPos < this.cellCount; cellPos++) {
                 cellList.add(new Cell());
             }
-            for (int cellPos = 0; cellPos < cellCount; cellPos++) {
+            for (int cellPos = 0; cellPos < this.cellCount; cellPos++) {
                 final Cell cell = cellList.get(cellPos);
                 final Cell[] nextCellArr = new Cell[2];
                 nextCellArr[0] = this.getCell(cellList, cellPos - 1);
@@ -46,5 +45,9 @@ public class PhaseSpace {
     public Cell getCell(final int phaseShiftNr, final int cellPos) {
         final List<Cell> cellList = this.shiftList.get(phaseShiftNr);
         return cellList.get(cellPos);
+    }
+
+    public int getSize() {
+        return this.cellCount;
     }
 }

@@ -36,16 +36,19 @@ public class Engine {
             cellArr[1] = cell.getNextCell(Cell.Dir.Right);
 
             if (cell.getWaveListSize() < cellArr[0].getWaveListSize()) {
-                final Cell nCell = this.universe.getSpaceCell(spaceNr + 1, this.cellPos, Cell.Dir.Right);
+                final Cell nCell = this.universe.getSpaceCell(spaceNr + 1, this.cellPos, Cell.Dir.Left);
 
+                if (nCell.getWaveListSize() == 0) {
+                    nCell.addWave(new Wave(null));
+                }
             }
-
+/*
             if (cell.haveFirstWave()) {
                 final Wave wave = cell.removeFirstWave();
 
                 wave.execute();
             }
-
+*/
             if ((this.cellPos + 1) < this.universe.getUniverseSize()) {
                 this.cellPos++;
             } else {
