@@ -37,8 +37,6 @@ class UniverseTest {
 
         assertEquals(0, Universe.calcPhaseShiftNr(2, 0, Cell.Dir.Right));
         assertEquals(1, Universe.calcPhaseShiftNr(2, 0, Cell.Dir.Left));
-        assertEquals(0, Universe.calcPhaseShiftNr(2, 0, Cell.Dir.Right));
-        assertEquals(1, Universe.calcPhaseShiftNr(2, 0, Cell.Dir.Left));
         assertEquals(1, Universe.calcPhaseShiftNr(2, 1, Cell.Dir.Right));
         assertEquals(2, Universe.calcPhaseShiftNr(2, 1, Cell.Dir.Left));
         assertEquals(2, Universe.calcPhaseShiftNr(2, 2, Cell.Dir.Right));

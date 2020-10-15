@@ -24,9 +24,11 @@ public class Universe {
      */
     private List<PhaseSpace> spaceList = new ArrayList<>();
     private int universeSize;
+    private int spaceSize;
 
     public Universe(final int universeSize, final int spaceSize) {
         this.universeSize = universeSize;
+        this.spaceSize = spaceSize;
         for (int spacePos = 0; spacePos < spaceSize; spacePos++) {
             final PhaseSpace phaseSpace = new PhaseSpace(spacePos + 1, universeSize);
             this.spaceList.add(phaseSpace);
@@ -35,6 +37,10 @@ public class Universe {
 
     public int getUniverseSize() {
         return this.universeSize;
+    }
+
+    public int getSpaceSize() {
+        return this.spaceSize;
     }
 
     public int getSpaceSize(final int spacePos) {
@@ -62,8 +68,9 @@ public class Universe {
      1        |.|.|.|.|.|.|.|.|.|.|.|.|.|.|1|.|.|.|.|.|.|.|.|.|.|.|.|.|
      */
     public Cell getSpaceCell(final int spaceNr, final int cellPos, final Cell.Dir dir) {
-        final int cellNr = cellPos / (spaceNr + 1);
-        final int phaseShiftNr = calcPhaseShiftNr(spaceNr, cellPos, dir);
+        final int wrapedCellPos = wrap(cellPos, this.universeSize);
+        final int phaseShiftNr = calcPhaseShiftNr(spaceNr, wrapedCellPos, dir);
+        final int cellNr = (wrapedCellPos - phaseShiftNr)  / (spaceNr + 1);
         return getCell(spaceNr, phaseShiftNr, cellNr);
     }
 
@@ -80,6 +87,20 @@ public class Universe {
             default -> throw new RuntimeException(String.format("Unexcpected direction \"%s\".", dir));
         }
         return phaseShiftNr;
+    }
+
+    public static int calcDirOffset(final Cell.Dir dir) {
+        final int dirOffset;
+        switch (dir) {
+            case Left -> {
+                dirOffset = -1;
+            }
+            case Right -> {
+                dirOffset = +1;
+            }
+            default -> throw new RuntimeException(String.format("Unexcpected direction \"%s\".", dir));
+        }
+        return dirOffset;
     }
 
     public static int wrap(final int pos, final int range) {

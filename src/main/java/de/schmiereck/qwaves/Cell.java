@@ -2,6 +2,7 @@ package de.schmiereck.qwaves;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.stream.Stream;
 
 public class Cell {
     public enum Dir {
@@ -26,6 +27,10 @@ public class Cell {
 
     public int getWaveListSize() {
         return this.waveList.size();
+    }
+
+    public Stream<Wave> getWaveListStream() {
+        return this.waveList.stream();
     }
 
     public boolean haveFirstWave() {
