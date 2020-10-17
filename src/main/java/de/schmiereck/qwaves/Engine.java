@@ -22,8 +22,13 @@ public class Engine {
     }
 
     public void run() {
-         for (int spaceNr = this.universe.getSpaceSize() - 1; spaceNr > 0; spaceNr--) {
-             for (int cellPos = 0; (cellPos + 1) < this.universe.getUniverseSize(); cellPos++) {
+        this.universe.clearReality();
+
+        for (int spaceNr = this.universe.getSpaceSize() - 1; spaceNr > 0; spaceNr--) {
+            final int spacePos = spaceNr - 1;
+            for (int cellPos = 0; (cellPos + 1) < this.universe.getUniverseSize(); cellPos++) {
+                final RealityCell realityCell = this.universe.getRealityCell(cellPos);
+
                 for (Cell.Dir dir : Cell.Dir.values()) {
                     final Cell nCell = this.universe.getSpaceCell(spaceNr - 1, cellPos + calcDirOffset(dir), dir);
                     final int finalSpaceNr = spaceNr;
@@ -33,7 +38,9 @@ public class Engine {
                         nsCell.addWave(new Wave(wave.getEvent()));
                     });
                 }
+                final Cell cell = this.universe.getSpaceCell(spaceNr, cellPos, Cell.Dir.Right);
+                realityCell.addWaveCount(spacePos, cell.getWaveListSize());
             }
         }
-     }
+    }
 }

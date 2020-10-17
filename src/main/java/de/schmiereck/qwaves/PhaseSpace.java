@@ -42,8 +42,8 @@ public class PhaseSpace {
         return cell;
     }
 
-    public Cell getCell(final int phaseShiftNr, final int cellPos) {
-        final List<Cell> cellList = this.shiftList.get(phaseShiftNr);
+    public Cell getCell(final int phaseShiftPos, final int cellPos) {
+        final List<Cell> cellList = this.shiftList.get(phaseShiftPos);
         return cellList.get(cellPos);
     }
 

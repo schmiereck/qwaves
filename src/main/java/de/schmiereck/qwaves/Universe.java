@@ -2,6 +2,7 @@ package de.schmiereck.qwaves;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class Universe {
     /**
@@ -23,16 +24,20 @@ public class Universe {
      *              Cell (Zelle)
      */
     private List<PhaseSpace> spaceList = new ArrayList<>();
+    private List<RealityCell> realityCellList = new ArrayList<>();
     private int universeSize;
     private int spaceSize;
 
     public Universe(final int universeSize, final int spaceSize) {
         this.universeSize = universeSize;
         this.spaceSize = spaceSize;
-        for (int spacePos = 0; spacePos < spaceSize; spacePos++) {
-            final PhaseSpace phaseSpace = new PhaseSpace(spacePos + 1, universeSize);
-            this.spaceList.add(phaseSpace);
-        }
+        IntStream.range(0, spaceSize).
+                mapToObj(spacePos ->
+                    new PhaseSpace(spacePos + 1, universeSize)).
+                forEach(phaseSpace -> this.spaceList.add(phaseSpace));
+        IntStream.range(0, this.universeSize).
+                forEach(cellPos ->
+                    this.realityCellList.add(new RealityCell(this.spaceSize)));
     }
 
     public int getUniverseSize() {
@@ -48,15 +53,15 @@ public class Universe {
         return phaseSpace.getSize();
     }
 
-    public void addEvent(final int spaceNr, final int spaceShiftNr, final int cellPos, final Event event) {
-        final Cell cell = this.getCell(spaceNr, spaceShiftNr, cellPos);
+    public void addEvent(final int spacePos, final int spaceShiftPos, final int cellPos, final Event event) {
+        final Cell cell = this.getCell(spacePos, spaceShiftPos, cellPos);
 
         event.getTickList().forEach((tick) -> cell.addWave(tick));
     }
 
-    public Cell getCell(final int spacePos, final int phaseShiftNr, final int cellPos) {
+    public Cell getCell(final int spacePos, final int phaseShiftPos, final int cellPos) {
         final PhaseSpace phaseSpace = this.spaceList.get(spacePos);
-        return phaseSpace.getCell(phaseShiftNr, cellPos);
+        return phaseSpace.getCell(phaseShiftPos, cellPos);
     }
 
     /**
@@ -67,26 +72,26 @@ public class Universe {
      2        |. .|. .|. .|. .|. .|. .|. .|1 1|. .|. .|. .|. .|. .|. .|
      1        |.|.|.|.|.|.|.|.|.|.|.|.|.|.|1|.|.|.|.|.|.|.|.|.|.|.|.|.|
      */
-    public Cell getSpaceCell(final int spaceNr, final int cellPos, final Cell.Dir dir) {
+    public Cell getSpaceCell(final int spacePos, final int cellPos, final Cell.Dir dir) {
         final int wrapedCellPos = wrap(cellPos, this.universeSize);
-        final int phaseShiftNr = calcPhaseShiftNr(spaceNr, wrapedCellPos, dir);
-        final int cellNr = (wrapedCellPos - phaseShiftNr)  / (spaceNr + 1);
-        return getCell(spaceNr, phaseShiftNr, cellNr);
+        final int phaseShiftPos = calcPhaseShiftPos(spacePos, wrapedCellPos, dir);
+        final int phaseShiftCellPos = (wrapedCellPos - phaseShiftPos)  / (spacePos + 1);
+        return getCell(spacePos, phaseShiftPos, phaseShiftCellPos);
     }
 
-    public static int calcPhaseShiftNr(final int spaceNr, final int cellPos, final Cell.Dir dir) {
-        final int phaseShiftNr;
-        final int pos = cellPos % (spaceNr + 1);
+    public static int calcPhaseShiftPos(final int spacePos, final int cellPos, final Cell.Dir dir) {
+        final int phaseShiftPos;
+        final int pos = cellPos % (spacePos + 1);
         switch (dir) {
             case Left -> {
-                phaseShiftNr = wrap( pos + 1, spaceNr + 1);
+                phaseShiftPos = wrap( pos + 1, spacePos + 1);
             }
             case Right -> {
-                phaseShiftNr = wrap(pos, spaceNr + 1);
+                phaseShiftPos = wrap(pos, spacePos + 1);
             }
             default -> throw new RuntimeException(String.format("Unexcpected direction \"%s\".", dir));
         }
-        return phaseShiftNr;
+        return phaseShiftPos;
     }
 
     public static int calcDirOffset(final Cell.Dir dir) {
@@ -115,5 +120,17 @@ public class Universe {
             }
         }
         return ret;
+
+    }
+
+    public void clearReality() {
+        IntStream.range(0, this.spaceSize).
+                forEach(spacePos ->
+                        this.realityCellList.forEach(realityCell ->
+                                realityCell.setWaveCount(spacePos, 0)));
+    }
+
+    public RealityCell getRealityCell(final int cellPos) {
+        return this.realityCellList.get(cellPos);
     }
 }

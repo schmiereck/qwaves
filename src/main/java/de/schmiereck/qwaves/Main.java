@@ -29,17 +29,32 @@ public class Main {
 
         universe.addEvent(0, 0, 8, event);
 
+        boolean showSpaceCells = false;
+        boolean showReality = true;
         long runNr = 0;
         while (runNr < 180) {
-            for (int spacePos = 0; spacePos < spaceSize; spacePos++) {
-                for (int shiftPos = 0; shiftPos < spacePos + 1; shiftPos++) {
-                    System.out.printf("%2d/%2d:%4d:", spacePos + 1, shiftPos, runNr);
-                    for (int p = 0; p < ((shiftPos) * 3); p++) {
-                        System.out.print(" ");
+            if (showSpaceCells) {
+                for (int spacePos = 0; spacePos < spaceSize; spacePos++) {
+                    for (int shiftPos = 0; shiftPos < spacePos + 1; shiftPos++) {
+                        System.out.printf("%4d:%2d/%2d:", runNr, spacePos + 1, shiftPos);
+                        for (int p = 0; p < ((shiftPos) * 3); p++) {
+                            System.out.print(" ");
+                        }
+                        for (int cellPos = 0; cellPos < universe.getSpaceSize(spacePos); cellPos++) {
+                            final Cell cell = universe.getCell(spacePos, shiftPos, cellPos);
+                            System.out.printf("|%" + ((spacePos + 1) * 2 + (spacePos * 1)) + "d", cell.getWaveListSize());
+                        }
+                        System.out.println("|");
                     }
-                    for (int cellPos = 0; cellPos < universe.getSpaceSize(spacePos); cellPos++) {
-                        final Cell cell = universe.getCell(spacePos, shiftPos, cellPos);
-                        System.out.printf("|%" + ((spacePos + 1) * 2 + (spacePos * 1)) + "d", cell.getWaveListSize());
+                }
+            }
+            if (showReality) {
+                for (int spacePos = 0; spacePos < spaceSize; spacePos++) {
+                    final int spaceNr = spacePos + 1;
+                    System.out.printf("%3d:%3d: ", runNr, spaceNr);
+                    for (int cellPos = 0; cellPos < universe.getUniverseSize(); cellPos++) {
+                        final RealityCell realityCell = universe.getRealityCell(cellPos);
+                        System.out.printf("|%3d", realityCell.getWaveCount(spacePos));
                     }
                     System.out.println("|");
                 }
