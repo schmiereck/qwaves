@@ -34,7 +34,7 @@ public class Main {
         boolean showSpaceCells = true;
         boolean showReality = true;
         long runNr = 0;
-        while (runNr < 2) {
+        while (runNr < 4) {
             if (showSpaceCells) {
                 for (int spacePos = 0; spacePos < spaceSize; spacePos++) {
                     for (int shiftPos = 0; shiftPos < spacePos + 1; shiftPos++) {
@@ -53,16 +53,28 @@ public class Main {
             if (showReality) {
                 for (int spacePos = 0; spacePos < spaceSize; spacePos++) {
                     final int spaceNr = spacePos + 1;
+                    int spaceWaveCount = 0;
                     System.out.printf("%4d:%3d:  ", runNr, spaceNr);
                     for (int cellPos = 0; cellPos < universe.getUniverseSize(); cellPos++) {
                         final RealityCell realityCell = universe.getRealityCell(cellPos);
-                        System.out.printf("|%2d", realityCell.getWaveCount(spacePos));
+                        final int waveCount = realityCell.getWaveCount(spacePos);
+                        System.out.printf("|%2d", waveCount);
+                        spaceWaveCount += waveCount;
                     }
-                    System.out.println("|");
+                    final int spaceCellProbability = calcSum(spacePos);
+                    System.out.printf("| 1/%d %d*%d=%d (%d)\n", spaceCellProbability, spaceCellProbability, spaceNr, spaceCellProbability * spaceNr, spaceWaveCount);
                 }
             }
             engine.run();
             runNr++;
         }
+    }
+
+    private static int calcSum(final int n) {
+        int ret = 1;
+        for (int pos = 0; pos < n; pos++) {
+            ret += (ret);
+        }
+        return ret;
     }
 }

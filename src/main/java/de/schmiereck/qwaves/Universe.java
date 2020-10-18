@@ -134,7 +134,6 @@ public class Universe {
             }
         }
         return ret;
-
     }
 
     public void clearReality() {
