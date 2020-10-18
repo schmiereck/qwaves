@@ -79,6 +79,20 @@ public class Universe {
         return getCell(spacePos, phaseShiftPos, phaseShiftCellPos);
     }
 
+    /**
+     3            |. . .|. . .|. . .|. . .|1 1 1|. . .|. . .|. . .|. . .|. . .|
+     3          |. . .|. . .|. . .|. . .|. . .|. . .|. . .|. . .|. . .|. . .|
+     3        |. . .|. . .|. . .|. . .|1 1 1|. . .|. . .|. . .|. . .|. . .|
+     2          |. .|. .|. .|. .|. .|. .|1 1|. .|. .|. .|. .|. .|. .|. .|
+     2        |. .|. .|. .|. .|. .|. .|. .|1 1|. .|. .|. .|. .|. .|. .|
+     1        |.|.|.|.|.|.|.|.|.|.|.|.|.|.|1|.|.|.|.|.|.|.|.|.|.|.|.|.|
+     */
+    public Cell getSpaceCell(final int spacePos, final int cellPos, final int phaseShiftPos) {
+        final int wrapedCellPos = wrap(cellPos, this.universeSize);
+        final int phaseShiftCellPos = (wrapedCellPos - phaseShiftPos)  / (spacePos + 1);
+        return getCell(spacePos, phaseShiftPos, phaseShiftCellPos);
+    }
+
     public static int calcPhaseShiftPos(final int spacePos, final int cellPos, final Cell.Dir dir) {
         final int phaseShiftPos;
         final int pos = cellPos % (spacePos + 1);
@@ -131,6 +145,18 @@ public class Universe {
     }
 
     public RealityCell getRealityCell(final int cellPos) {
-        return this.realityCellList.get(cellPos);
+        return this.realityCellList.get(wrap(cellPos, this.universeSize));
+    }
+
+    public void calcReality() {
+        for (int cellPos = 0; (cellPos + 1) < this.universeSize; cellPos++) {
+            for (int spacePos = 0; spacePos < this.spaceSize; spacePos++) {
+                for (int phaseShiftPos = 0; phaseShiftPos <= spacePos; phaseShiftPos++) {
+                    final RealityCell realityCell = this.getRealityCell(cellPos);
+                    final Cell cell = this.getSpaceCell(spacePos, cellPos, phaseShiftPos);
+                    realityCell.addWaveCount(spacePos, cell.getWaveListSize());
+                }
+            }
+        }
     }
 }

@@ -29,10 +29,12 @@ public class Main {
 
         universe.addEvent(0, 0, 8, event);
 
-        boolean showSpaceCells = false;
+        universe.calcReality();
+
+        boolean showSpaceCells = true;
         boolean showReality = true;
         long runNr = 0;
-        while (runNr < 180) {
+        while (runNr < 2) {
             if (showSpaceCells) {
                 for (int spacePos = 0; spacePos < spaceSize; spacePos++) {
                     for (int shiftPos = 0; shiftPos < spacePos + 1; shiftPos++) {
@@ -51,10 +53,10 @@ public class Main {
             if (showReality) {
                 for (int spacePos = 0; spacePos < spaceSize; spacePos++) {
                     final int spaceNr = spacePos + 1;
-                    System.out.printf("%3d:%3d: ", runNr, spaceNr);
+                    System.out.printf("%4d:%3d:  ", runNr, spaceNr);
                     for (int cellPos = 0; cellPos < universe.getUniverseSize(); cellPos++) {
                         final RealityCell realityCell = universe.getRealityCell(cellPos);
-                        System.out.printf("|%3d", realityCell.getWaveCount(spacePos));
+                        System.out.printf("|%2d", realityCell.getWaveCount(spacePos));
                     }
                     System.out.println("|");
                 }

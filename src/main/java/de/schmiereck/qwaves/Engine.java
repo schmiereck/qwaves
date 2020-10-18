@@ -2,6 +2,7 @@ package de.schmiereck.qwaves;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static de.schmiereck.qwaves.Universe.calcDirOffset;
 
@@ -27,20 +28,16 @@ public class Engine {
         for (int spaceNr = this.universe.getSpaceSize() - 1; spaceNr > 0; spaceNr--) {
             final int spacePos = spaceNr - 1;
             for (int cellPos = 0; (cellPos + 1) < this.universe.getUniverseSize(); cellPos++) {
-                final RealityCell realityCell = this.universe.getRealityCell(cellPos);
-
+                final int finalCellPos = cellPos;
                 for (Cell.Dir dir : Cell.Dir.values()) {
-                    final Cell nCell = this.universe.getSpaceCell(spaceNr - 1, cellPos + calcDirOffset(dir), dir);
-                    final int finalSpaceNr = spaceNr;
-                    final int finalCellPos = cellPos;
+                    final Cell nCell = this.universe.getSpaceCell(spacePos, cellPos + calcDirOffset(dir), dir);
                     nCell.getWaveListStream().forEach((wave) -> {
-                        final Cell nsCell = this.universe.getSpaceCell(finalSpaceNr, finalCellPos, dir);
-                        nsCell.addWave(new Wave(wave.getEvent()));
+                        final Cell nsCell = this.universe.getSpaceCell(spacePos + 1, finalCellPos, dir);
+                        nsCell.addWave(wave.getEvent().createWave());
                     });
                 }
-                final Cell cell = this.universe.getSpaceCell(spaceNr, cellPos, Cell.Dir.Right);
-                realityCell.addWaveCount(spacePos, cell.getWaveListSize());
             }
         }
+        this.universe.calcReality();
     }
 }
