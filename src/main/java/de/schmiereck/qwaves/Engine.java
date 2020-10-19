@@ -23,21 +23,20 @@ public class Engine {
     }
 
     public void run() {
-        this.universe.clearReality();
-
         for (int spaceNr = this.universe.getSpaceSize() - 1; spaceNr > 0; spaceNr--) {
             final int spacePos = spaceNr - 1;
-            for (int cellPos = 0; (cellPos + 1) < this.universe.getUniverseSize(); cellPos++) {
+            for (int cellPos = 0; cellPos < this.universe.getUniverseSize(); cellPos++) {
                 final int finalCellPos = cellPos;
-                for (Cell.Dir dir : Cell.Dir.values()) {
+                // Diverge:
+                for (final Cell.Dir dir : Cell.Dir.values()) {
                     final Cell nCell = this.universe.getSpaceCell(spacePos, cellPos + calcDirOffset(dir), dir);
                     nCell.getWaveListStream().forEach((wave) -> {
                         final Cell nsCell = this.universe.getSpaceCell(spacePos + 1, finalCellPos, dir);
                         nsCell.addWave(wave.getEvent().createWave());
+                        wave.setWaveDiverge(true);
                     });
                 }
             }
         }
-        this.universe.calcReality();
     }
 }

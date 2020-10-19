@@ -23,17 +23,18 @@ public class Universe {
      *          Phase-List per Phase-Shift (Phase)
      *              Cell (Zelle)
      */
-    private List<PhaseSpace> spaceList = new ArrayList<>();
-    private List<RealityCell> realityCellList = new ArrayList<>();
-    private int universeSize;
-    private int spaceSize;
+    private final List<PhaseSpace> spaceList = new ArrayList<>();
+    private final List<RealityCell> realityCellList = new ArrayList<>();
+    private final int universeSize;
+    private final int spaceSize;
+    private int calcPos = 0;
 
     public Universe(final int universeSize, final int spaceSize) {
         this.universeSize = universeSize;
         this.spaceSize = spaceSize;
         IntStream.range(0, spaceSize).
                 mapToObj(spacePos ->
-                    new PhaseSpace(spacePos + 1, universeSize)).
+                    new PhaseSpace(this, spacePos + 1, universeSize)).
                 forEach(phaseSpace -> this.spaceList.add(phaseSpace));
         IntStream.range(0, this.universeSize).
                 forEach(cellPos ->
@@ -76,7 +77,7 @@ public class Universe {
         final int wrapedCellPos = wrap(cellPos, this.universeSize);
         final int phaseShiftPos = calcPhaseShiftPos(spacePos, wrapedCellPos, dir);
         final int phaseShiftCellPos = (wrapedCellPos - phaseShiftPos)  / (spacePos + 1);
-        return getCell(spacePos, phaseShiftPos, phaseShiftCellPos);
+        return this.getCell(spacePos, phaseShiftPos, phaseShiftCellPos);
     }
 
     /**
@@ -90,7 +91,7 @@ public class Universe {
     public Cell getSpaceCell(final int spacePos, final int cellPos, final int phaseShiftPos) {
         final int wrapedCellPos = wrap(cellPos, this.universeSize);
         final int phaseShiftCellPos = (wrapedCellPos - phaseShiftPos)  / (spacePos + 1);
-        return getCell(spacePos, phaseShiftPos, phaseShiftCellPos);
+        return this.getCell(spacePos, phaseShiftPos, phaseShiftCellPos);
     }
 
     public static int calcPhaseShiftPos(final int spacePos, final int cellPos, final Cell.Dir dir) {
@@ -148,14 +149,44 @@ public class Universe {
     }
 
     public void calcReality() {
-        for (int cellPos = 0; (cellPos + 1) < this.universeSize; cellPos++) {
-            for (int spacePos = 0; spacePos < this.spaceSize; spacePos++) {
-                for (int phaseShiftPos = 0; phaseShiftPos <= spacePos; phaseShiftPos++) {
+//      for (int cellPos = 0; cellPos < this.universeSize; cellPos++) {
+        IntStream.range(0, this.universeSize).forEach((cellPos) -> {
+//          for (int spacePos = 0; spacePos < this.spaceSize; spacePos++) {
+            IntStream.range(0, this.spaceSize).forEach((spacePos) -> {
+//              for (int phaseShiftPos = 0; phaseShiftPos <= spacePos; phaseShiftPos++) {
+                IntStream.rangeClosed(0, spacePos).forEach((phaseShiftPos) -> {
                     final RealityCell realityCell = this.getRealityCell(cellPos);
                     final Cell cell = this.getSpaceCell(spacePos, cellPos, phaseShiftPos);
                     realityCell.addWaveCount(spacePos, cell.getWaveListSize());
-                }
-            }
-        }
+                });
+            });
+        });
+    }
+
+    public int getCalcPos() {
+        return this.calcPos;
+    }
+
+    public int getActCalcPos() {
+        return this.calcPos % 2;
+    }
+
+    public int getNextCalcPos() {
+        return (this.calcPos + 1) % 2;
+    }
+
+    public void calcNext() {
+//      for (int cellPos = 0; cellPos < this.universeSize; cellPos++) {
+        IntStream.range(0, this.universeSize).forEach((cellPos) -> {
+//          for (int spacePos = 0; spacePos < this.spaceSize; spacePos++) {
+            IntStream.range(0, this.spaceSize).forEach((spacePos) -> {
+//              for (int phaseShiftPos = 0; phaseShiftPos <= spacePos; phaseShiftPos++) {
+                IntStream.rangeClosed(0, spacePos).forEach((phaseShiftPos) -> {
+                    final Cell cell = this.getSpaceCell(spacePos, cellPos, phaseShiftPos);
+                    cell.clearWaveList();
+                });
+            });
+        });
+        this.calcPos++;
     }
 }

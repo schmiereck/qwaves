@@ -4,23 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PhaseSpace {
-    private int spaceNr;
-    private int cellCount;
+    private final int spaceNr;
+    private final int cellCount;
     /**
      *  Space (Phasenraum)
      *      Phase-List per Phase-Shift (Phase)
      *          Cell (Zelle)
      */
-    private List<List<Cell>> shiftList = new ArrayList<>();
+    private final List<List<Cell>> shiftList = new ArrayList<>();
 
-    public PhaseSpace(final int spaceNr, final int universeSize) {
+    public PhaseSpace(final Universe universe, final int spaceNr, final int universeSize) {
         this.spaceNr = spaceNr;
         this.cellCount = universeSize / this.spaceNr;
         for (int shiftPos = 0; shiftPos < spaceNr; shiftPos++) {
-            final List<Cell> cellList = new ArrayList<Cell>();
+            final List<Cell> cellList = new ArrayList<>();
             this.shiftList.add(cellList);
             for (int cellPos = 0; cellPos < this.cellCount; cellPos++) {
-                cellList.add(new Cell());
+                cellList.add(new Cell(universe));
             }
             for (int cellPos = 0; cellPos < this.cellCount; cellPos++) {
                 final Cell cell = cellList.get(cellPos);

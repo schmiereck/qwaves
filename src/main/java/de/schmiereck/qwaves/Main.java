@@ -29,10 +29,11 @@ public class Main {
 
         universe.addEvent(0, 0, 8, event);
 
+        universe.calcNext();
         universe.calcReality();
 
-        boolean showSpaceCells = true;
-        boolean showReality = true;
+        final boolean showSpaceCells = true;
+        final boolean showReality = true;
         long runNr = 0;
         while (runNr < 4) {
             if (showSpaceCells) {
@@ -65,7 +66,10 @@ public class Main {
                     System.out.printf("| 1/%d %d*%d=%d (%d)\n", spaceCellProbability, spaceCellProbability, spaceNr, spaceCellProbability * spaceNr, spaceWaveCount);
                 }
             }
+            universe.clearReality();
             engine.run();
+            universe.calcNext();
+            universe.calcReality();
             runNr++;
         }
     }
