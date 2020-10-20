@@ -2,6 +2,7 @@ package de.schmiereck.qwaves;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static de.schmiereck.qwaves.Universe.calcDirOffset;
 
@@ -22,9 +23,8 @@ public class Engine {
     }
 
     public void run() {
-        for (int spaceNr = this.universe.getSpaceSize(); spaceNr > 0; spaceNr--) {
-            final int spacePos = spaceNr - 1;
-            for (int cellPos = 0; cellPos < this.universe.getUniverseSize(); cellPos++) {
+        IntStream.range(0, this.universe.getUniverseSize()).forEach(cellPos -> {
+            IntStream.range(0, this.universe.getSpaceSize()).forEach(spacePos -> {
                 final int finalCellPos = cellPos;
                 // Stay:
                 {
@@ -96,8 +96,8 @@ public class Engine {
                         }
                     }
                 }
-            }
-        }
+            });
+        });
     }
 
     private boolean checkIsBarrier(final Cell cell) {
