@@ -30,6 +30,7 @@ public class Main {
 
         final Event barrierEvent = new Event(engine, 0);
         universe.addBariere(barrierEvent, 10, Cell.Dir.Right);
+        //universe.addBariere(barrierEvent, 10, Cell.Dir.Left);
 
         universe.calcNext();
         universe.calcReality();
@@ -61,7 +62,7 @@ public class Main {
                     System.out.printf("%4d:%3d:  ", runNr, spaceNr);
                     for (int cellPos = 0; cellPos < universe.getUniverseSize(); cellPos++) {
                         final RealityCell realityCell = universe.getRealityCell(cellPos);
-                        if (realityCell.getBarrier()) {
+                        if (realityCell.getBarrier(spacePos)) {
                             System.out.printf("|##");
                         } else {
                             final int waveCount = realityCell.getWaveCount(spacePos);

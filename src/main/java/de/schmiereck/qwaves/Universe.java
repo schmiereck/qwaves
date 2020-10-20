@@ -142,7 +142,7 @@ public class Universe {
                 forEach(spacePos ->
                         this.realityCellList.forEach(realityCell -> {
                             realityCell.setWaveCount(spacePos, 0);
-                            realityCell.setBarrier(false);
+                            realityCell.setBarrier(spacePos, false);
                         }));
     }
 
@@ -163,7 +163,7 @@ public class Universe {
                     final int barrierCount = (int) cell.getWaveListStream().filter((wave) -> wave.getEvent().getEventType() == 0).count();
                     realityCell.addWaveCount(spacePos, particleCount);
                     if (barrierCount > 0) {
-                        realityCell.setBarrier(true);
+                        realityCell.setBarrier(spacePos, true);
                     }
                 });
             });
@@ -202,5 +202,19 @@ public class Universe {
             final Cell cell = this.getSpaceCell(spacePos, cellPos, dir);
             cell.addWave(event.createWave());
         });
+    }
+
+    public Cell.Dir calcOtherDir(final Cell.Dir dir) {
+        final Cell.Dir retDir;
+        switch (dir) {
+            case Left -> {
+                retDir = Cell.Dir.Right;
+            }
+            case Right -> {
+                retDir = Cell.Dir.Left;
+            }
+            default -> throw new RuntimeException(String.format("Unexcpected direction \"%s\".", dir));
+        }
+        return retDir;
     }
 }

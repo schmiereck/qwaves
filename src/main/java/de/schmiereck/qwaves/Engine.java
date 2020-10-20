@@ -29,12 +29,12 @@ public class Engine {
                 final int finalCellPos = cellPos;
                 // Stay:
                 {
-                    final Cell nCell = this.universe.getSpaceCell(spacePos, cellPos, Cell.Dir.Right);
-                    nCell.getWaveListStream().forEach((wave) -> {
-                        final Event event = wave.getEvent();
-                        // Cell contains Barrier?
-                        if (event.getEventType() == 0) {
-                            nCell.addWave(wave);
+                    final Cell sourceCell = this.universe.getSpaceCell(spacePos, cellPos, Cell.Dir.Right);
+                    sourceCell.getWaveListStream().forEach((sourceWave) -> {
+                        final Event sourceEvent = sourceWave.getEvent();
+                        // Source-Cell-Wave is a Barrier?
+                        if (sourceEvent.getEventType() == 0) {
+                            sourceCell.addWave(sourceWave);
                         }
                     });
                 }
@@ -42,14 +42,39 @@ public class Engine {
                 {
                     if (spacePos < (this.universe.getSpaceSize() - 1)) {
                         for (final Cell.Dir dir : Cell.Dir.values()) {
-                            final Cell nCell = this.universe.getSpaceCell(spacePos, cellPos + calcDirOffset(dir), dir);
-                            nCell.getWaveListStream().forEach((wave) -> {
-                                final Event event = wave.getEvent();
-                                // Neighbour is Particle?
-                                if (event.getEventType() == 1) {
-                                    final Cell nsCell = this.universe.getSpaceCell(spacePos + 1, finalCellPos, dir);
-                                    nsCell.addWave(event.createWave());
-                                    wave.setWaveDiverge(true);
+                            final Cell sourceCell = this.universe.getSpaceCell(spacePos, cellPos + calcDirOffset(dir), dir);
+                            sourceCell.getWaveListStream().forEach((sourceWave) -> {
+                                final Event sourceEvent = sourceWave.getEvent();
+                                // Source-Cell-Wave is a Particle?
+                                if (sourceEvent.getEventType() == 1) {
+                                    final Cell targetCell = this.universe.getSpaceCell(spacePos + 1, finalCellPos, dir);
+                                    final Cell otherWaveTargetCell = this.universe.getSpaceCell(spacePos + 1, finalCellPos, this.universe.calcOtherDir(dir));
+                                    // Target-Cell contains a barrier-wave?
+                                    if (checkIsBarrier(otherWaveTargetCell)) {
+                                        final Cell lastTargetCell = sourceWave.getTargetCell();
+                                        // Already diverge 50%?
+                                        if (lastTargetCell != null) {
+                                            // Diverge the other 50% to same phase.
+                                            lastTargetCell.addWave(sourceEvent.createWave());
+                                        } else {
+                                            // Diverge is impossible.
+                                            // Stay in phase.
+                                            sourceCell.addWave(sourceWave);
+                                        }
+                                    } else {
+                                        targetCell.addWave(sourceEvent.createWave());
+                                        final Cell lastTargetCell = sourceWave.getTargetCell();
+                                        // Not diverged to a target?
+                                        if (lastTargetCell == null) {
+                                            // Source-Wave has no target but is already diverged?
+                                            if (sourceWave.getWaveDiverge()) {
+                                                // Diverge 100%.
+                                                targetCell.addWave(sourceEvent.createWave());
+                                            }
+                                            sourceWave.setTargetCell(targetCell);
+                                        }
+                                    }
+                                    sourceWave.setWaveDiverge(true);
                                 }
                             });
                         }
@@ -57,5 +82,9 @@ public class Engine {
                 }
             }
         }
+    }
+
+    private boolean checkIsBarrier(final Cell cell) {
+        return cell.getWaveListStream().anyMatch(wave -> wave.getEvent().getEventType() == 0);
     }
 }
