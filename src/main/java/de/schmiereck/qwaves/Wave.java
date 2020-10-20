@@ -21,11 +21,11 @@ public class Wave {
         return this.event;
     }
 
-    public boolean getWaveDiverge() {
+    public boolean getDivergeCalculated() {
         return this.waveDiverge;
     }
 
-    public void setWaveDiverge(final boolean waveDiverge) {
+    public void setDivergeCalculated(final boolean waveDiverge) {
         this.waveDiverge = waveDiverge;
     }
 

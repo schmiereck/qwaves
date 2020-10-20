@@ -2,7 +2,6 @@ package de.schmiereck.qwaves;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import static de.schmiereck.qwaves.Universe.calcDirOffset;
 
@@ -52,29 +51,46 @@ public class Engine {
                                     // Target-Cell contains a barrier-wave?
                                     if (checkIsBarrier(otherWaveTargetCell)) {
                                         final Cell lastTargetCell = sourceWave.getTargetCell();
-                                        // Already diverge 50%?
-                                        if (lastTargetCell != null) {
-                                            // Diverge the other 50% to same phase.
-                                            lastTargetCell.addWave(sourceEvent.createWave());
+                                        if (sourceWave.getDivergeCalculated()) {
+                                            // Already diverge 50% in other direction?
+                                            if (lastTargetCell != null) {
+                                                // Diverge 50% to this target cell.
+                                                lastTargetCell.addWave(sourceEvent.createWave());
+                                                // And follow with the other 50% and diverge to same phase.
+                                                lastTargetCell.addWave(sourceEvent.createWave());
+                                            } else {
+                                                // Diverge is impossible.
+                                                // Stay in phase.
+                                                sourceWave.setDivergeCalculated(false);
+                                                sourceCell.addWave(sourceWave);
+                                            }
                                         } else {
-                                            // Diverge is impossible.
-                                            // Stay in phase.
-                                            sourceCell.addWave(sourceWave);
+                                            // Found no target, but Diverge calculation is done.
+                                            sourceWave.setDivergeCalculated(true);
                                         }
                                     } else {
-                                        targetCell.addWave(sourceEvent.createWave());
                                         final Cell lastTargetCell = sourceWave.getTargetCell();
-                                        // Not diverged to a target?
-                                        if (lastTargetCell == null) {
-                                            // Source-Wave has no target but is already diverged?
-                                            if (sourceWave.getWaveDiverge()) {
-                                                // Diverge 100%.
+                                        if (sourceWave.getDivergeCalculated()) {
+                                            // Diverged to a target yet?
+                                            if (lastTargetCell != null) {
+                                                // Diverge 50% to target cell.
+                                                targetCell.addWave(sourceEvent.createWave());
+                                                // Have last Target, than do this 50% to target.
+                                                lastTargetCell.addWave(sourceEvent.createWave());
+                                            } else {
+                                                // Source-Wave has no target but is already diverged?
+                                                // I want to diverge 50% to this target cell.
+                                                // Diverge 50% to target cell.
+                                                targetCell.addWave(sourceEvent.createWave());
+                                                // Have no last Target, than do this 50% also.
                                                 targetCell.addWave(sourceEvent.createWave());
                                             }
+                                        } else {
+                                            // Not diverged to a target yet.
                                             sourceWave.setTargetCell(targetCell);
+                                            sourceWave.setDivergeCalculated(true);
                                         }
                                     }
-                                    sourceWave.setWaveDiverge(true);
                                 }
                             });
                         }

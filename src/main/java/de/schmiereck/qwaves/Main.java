@@ -28,9 +28,13 @@ public class Main {
         final Wave wave = particleEvent.createWave();
         universe.addEvent(0, 0, 8, particleEvent);
 
+        // For Testing:
+        // Add a sharp Barrier...
         final Event barrierEvent = new Event(engine, 0);
+        // ...to the right...
         universe.addBariere(barrierEvent, 10, Cell.Dir.Right);
-        //universe.addBariere(barrierEvent, 10, Cell.Dir.Left);
+        // and to the left.
+        universe.addBariere(barrierEvent, 6, Cell.Dir.Left);
 
         universe.calcNext();
         universe.calcReality();
