@@ -14,27 +14,46 @@ public class Engine {
         this.universe = universe;
     }
 
-    public void addTick(final Wave wave) {
+    public void addWave(final Wave wave) {
         this.waveList.add(wave);
     }
 
-    public List<Wave> getTickList() {
+    public List<Wave> getWaveList() {
         return this.waveList;
     }
 
     public void run() {
-        for (int spaceNr = this.universe.getSpaceSize() - 1; spaceNr > 0; spaceNr--) {
+        for (int spaceNr = this.universe.getSpaceSize(); spaceNr > 0; spaceNr--) {
             final int spacePos = spaceNr - 1;
             for (int cellPos = 0; cellPos < this.universe.getUniverseSize(); cellPos++) {
                 final int finalCellPos = cellPos;
-                // Diverge:
-                for (final Cell.Dir dir : Cell.Dir.values()) {
-                    final Cell nCell = this.universe.getSpaceCell(spacePos, cellPos + calcDirOffset(dir), dir);
+                // Stay:
+                {
+                    final Cell nCell = this.universe.getSpaceCell(spacePos, cellPos, Cell.Dir.Right);
                     nCell.getWaveListStream().forEach((wave) -> {
-                        final Cell nsCell = this.universe.getSpaceCell(spacePos + 1, finalCellPos, dir);
-                        nsCell.addWave(wave.getEvent().createWave());
-                        wave.setWaveDiverge(true);
+                        final Event event = wave.getEvent();
+                        // Cell contains Barrier?
+                        if (event.getEventType() == 0) {
+                            nCell.addWave(wave);
+                        }
                     });
+                }
+                // Diverge:
+                {
+                    if (spacePos < (this.universe.getSpaceSize() - 1)) {
+                        for (final Cell.Dir dir : Cell.Dir.values()) {
+                            final Cell nCell = this.universe.getSpaceCell(spacePos, cellPos + calcDirOffset(dir), dir);
+                            nCell.getWaveListStream().forEach((wave) -> {
+                                final Event event = wave.getEvent();
+                                // Neighbour is Particle?
+                                if (event.getEventType() == 1) {
+                                    final Cell nsCell = this.universe.getSpaceCell(spacePos + 1, finalCellPos, dir);
+                                    nsCell.addWave(event.createWave());
+                                    wave.setWaveDiverge(true);
+                                }
+                            });
+                        }
+                    }
                 }
             }
         }

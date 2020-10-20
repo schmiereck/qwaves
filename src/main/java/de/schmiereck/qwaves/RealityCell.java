@@ -18,6 +18,7 @@ package de.schmiereck.qwaves;
  */
 public class RealityCell {
     private int[] waveCount;
+    private boolean barrier;
 
     RealityCell(final int spaceSize) {
         this.waveCount = new int[spaceSize];
@@ -33,5 +34,13 @@ public class RealityCell {
 
     public int getWaveCount(final int spacePos) {
         return this.waveCount[spacePos];
+    }
+
+    public void setBarrier(final boolean barrier) {
+        this.barrier = barrier;
+    }
+
+    public boolean getBarrier() {
+        return this.barrier;
     }
 }

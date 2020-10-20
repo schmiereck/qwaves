@@ -140,8 +140,10 @@ public class Universe {
     public void clearReality() {
         IntStream.range(0, this.spaceSize).
                 forEach(spacePos ->
-                        this.realityCellList.forEach(realityCell ->
-                                realityCell.setWaveCount(spacePos, 0)));
+                        this.realityCellList.forEach(realityCell -> {
+                            realityCell.setWaveCount(spacePos, 0);
+                            realityCell.setBarrier(false);
+                        }));
     }
 
     public RealityCell getRealityCell(final int cellPos) {
@@ -157,7 +159,12 @@ public class Universe {
                 IntStream.rangeClosed(0, spacePos).forEach((phaseShiftPos) -> {
                     final RealityCell realityCell = this.getRealityCell(cellPos);
                     final Cell cell = this.getSpaceCell(spacePos, cellPos, phaseShiftPos);
-                    realityCell.addWaveCount(spacePos, cell.getWaveListSize());
+                    final int particleCount = (int) cell.getWaveListStream().filter((wave) -> wave.getEvent().getEventType() == 1).count();
+                    final int barrierCount = (int) cell.getWaveListStream().filter((wave) -> wave.getEvent().getEventType() == 0).count();
+                    realityCell.addWaveCount(spacePos, particleCount);
+                    if (barrierCount > 0) {
+                        realityCell.setBarrier(true);
+                    }
                 });
             });
         });
@@ -188,5 +195,12 @@ public class Universe {
             });
         });
         this.calcPos++;
+    }
+
+    public void addBariere(final Event event, final int cellPos, final Cell.Dir dir) {
+        IntStream.range(0, this.spaceSize).forEach((spacePos) -> {
+            final Cell cell = this.getSpaceCell(spacePos, cellPos, dir);
+            cell.addWave(event.createWave());
+        });
     }
 }

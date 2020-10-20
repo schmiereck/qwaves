@@ -24,10 +24,12 @@ public class Main {
                 cell.addWave(tick);
             }
         });
-        final Event event = new Event(engine);
-        final Wave wave = event.createWave();
+        final Event particleEvent = new Event(engine, 1);
+        final Wave wave = particleEvent.createWave();
+        universe.addEvent(0, 0, 8, particleEvent);
 
-        universe.addEvent(0, 0, 8, event);
+        final Event barrierEvent = new Event(engine, 0);
+        universe.addBariere(barrierEvent, 10, Cell.Dir.Right);
 
         universe.calcNext();
         universe.calcReality();
@@ -36,9 +38,10 @@ public class Main {
         final boolean showReality = true;
         long runNr = 0;
         while (runNr < 4) {
+            System.out.println("----------------------------------------------------------------------------------------------------");
             if (showSpaceCells) {
-                for (int spacePos = 0; spacePos < spaceSize; spacePos++) {
-                    for (int shiftPos = 0; shiftPos < spacePos + 1; shiftPos++) {
+                for (int spacePos = spaceSize - 1; spacePos >= 0; spacePos--) {
+                    for (int shiftPos = spacePos; shiftPos >= 0; shiftPos--) {
                         System.out.printf("%4d:%2d/%2d:", runNr, spacePos + 1, shiftPos);
                         for (int p = 0; p < ((shiftPos) * 3); p++) {
                             System.out.print(" ");
@@ -52,17 +55,21 @@ public class Main {
                 }
             }
             if (showReality) {
-                for (int spacePos = 0; spacePos < spaceSize; spacePos++) {
+                for (int spacePos = spaceSize - 1; spacePos >= 0; spacePos--) {
                     final int spaceNr = spacePos + 1;
                     int spaceWaveCount = 0;
                     System.out.printf("%4d:%3d:  ", runNr, spaceNr);
                     for (int cellPos = 0; cellPos < universe.getUniverseSize(); cellPos++) {
                         final RealityCell realityCell = universe.getRealityCell(cellPos);
-                        final int waveCount = realityCell.getWaveCount(spacePos);
-                        System.out.printf("|%2d", waveCount);
-                        spaceWaveCount += waveCount;
+                        if (realityCell.getBarrier()) {
+                            System.out.printf("|##");
+                        } else {
+                            final int waveCount = realityCell.getWaveCount(spacePos);
+                            System.out.printf("|%2d", waveCount);
+                            spaceWaveCount += waveCount;
+                        }
                     }
-                    final int spaceCellProbability = calcSum(spacePos);
+                    final int spaceCellProbability = calcSumSum(spacePos);
                     System.out.printf("| 1/%d %d*%d=%d (%d)\n", spaceCellProbability, spaceCellProbability, spaceNr, spaceCellProbability * spaceNr, spaceWaveCount);
                 }
             }
@@ -74,7 +81,7 @@ public class Main {
         }
     }
 
-    private static int calcSum(final int n) {
+    private static int calcSumSum(final int n) {
         int ret = 1;
         for (int pos = 0; pos < n; pos++) {
             ret += (ret);
