@@ -6,8 +6,9 @@ public class Wave {
     private final Event event;
     private Cell cell;
     private Cell targetCell;
+    private int calcState = 0;
 
-    private boolean waveDiverge = false;
+    private boolean extendCalculated = false;
 
     public Wave(final Event event) {
         this.event = event;
@@ -21,12 +22,12 @@ public class Wave {
         return this.event;
     }
 
-    public boolean getDivergeCalculated() {
-        return this.waveDiverge;
+    public boolean getExtendCalculated() {
+        return this.extendCalculated;
     }
 
-    public void setDivergeCalculated(final boolean waveDiverge) {
-        this.waveDiverge = waveDiverge;
+    public void setExtendCalculated(final boolean extendCalculated) {
+        this.extendCalculated = extendCalculated;
     }
 
     public void setTargetCell(final Cell targetCell) {
@@ -35,5 +36,19 @@ public class Wave {
 
     public Cell getTargetCell() {
         return this.targetCell;
+    }
+
+    public int getCalcState() {
+        return this.calcState;
+    }
+
+    public void setCalcState(final int calcState) {
+        this.calcState = calcState;
+    }
+
+    public Wave createWave() {
+        final Wave wave = new Wave(this.event);
+        this.event.addWave(wave);
+        return wave;
     }
 }

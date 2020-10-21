@@ -15,9 +15,13 @@ public class Event {
 
     public Wave createWave() {
         final Wave wave = new Wave(this);
+        this.addWave(wave);
+        return wave;
+    }
+
+    public void addWave(final Wave wave) {
         this.waveList.add(wave);
         this.engine.addWave(wave);
-        return wave;
     }
 
     public List<Wave> getTickList() {
