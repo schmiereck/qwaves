@@ -24,17 +24,37 @@ public class Main {
                 cell.addWave(tick);
             }
         });
-        final Event particleEvent = new Event(engine, 1);
-        final Wave wave = particleEvent.createWave();
-        universe.addEvent(0, 0, 8, particleEvent);
 
-        // For Testing:
-        // Add a sharp Barrier...
-        final Event barrierEvent = new Event(engine, 0);
-        // ...to the right...
-        universe.addBariere(barrierEvent, 10, Cell.Dir.Right);
-        // and to the left.
-        universe.addBariere(barrierEvent, 6, Cell.Dir.Left);
+        // Extend Test:
+        {
+            final Event particleEvent = new Event(engine, 1);
+            final Wave wave = particleEvent.createWave();
+            universe.addEvent(0, 0, 8, particleEvent);
+
+            // For Testing:
+            // Add a sharp Barrier...
+            final Event barrierEvent = new Event(engine, 0);
+            // ...to the right...
+            universe.addBariere(barrierEvent, 10, Cell.Dir.Right);
+            // and to the left.
+            universe.addBariere(barrierEvent, 6, Cell.Dir.Left);
+        }
+        // Move Test:
+        {
+            final Event particleEvent = new Event(engine, 1);
+            final Wave wave = particleEvent.createWave();
+            wave.setDir(Cell.Dir.Right);
+            wave.setCalcState(1);
+            universe.addEvent(0, 0, 16, particleEvent);
+
+            // For Testing:
+            // Add a sharp Barrier...
+            final Event barrierEvent = new Event(engine, 0);
+            // ...to the right...
+            universe.addBariere(barrierEvent, 18, Cell.Dir.Right);
+            // and to the left.
+            universe.addBariere(barrierEvent, 14, Cell.Dir.Left);
+        }
 
         universe.calcNext();
         universe.calcReality();
@@ -78,10 +98,7 @@ public class Main {
                     System.out.printf("| 1/%d %d*%d=%d (%d)\n", spaceCellProbability, spaceCellProbability, spaceNr, spaceCellProbability * spaceNr, spaceWaveCount);
                 }
             }
-            universe.clearReality();
             engine.run();
-            universe.calcNext();
-            universe.calcReality();
             runNr++;
         }
     }

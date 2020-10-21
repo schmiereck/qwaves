@@ -7,6 +7,7 @@ public class Wave {
     private Cell cell;
     private Cell targetCell;
     private int calcState = 0;
+    private Cell.Dir dir = null;
 
     private boolean extendCalculated = false;
 
@@ -47,8 +48,29 @@ public class Wave {
     }
 
     public Wave createWave() {
-        final Wave wave = new Wave(this.event);
+        final Wave wave = createWave(this.dir, this.calcState);
         this.event.addWave(wave);
         return wave;
+    }
+
+    public Wave createWave(final Cell.Dir dir) {
+        final Wave wave = createWave(dir, this.calcState);
+        this.event.addWave(wave);
+        return wave;
+    }
+
+    public Wave createWave(final Cell.Dir dir, final int calcState) {
+        final Wave wave = new Wave(this.event);
+        wave.setDir(dir);
+        wave.setCalcState(calcState);
+        return wave;
+    }
+
+    public Cell.Dir getDir() {
+        return this.dir;
+    }
+
+    public void setDir(final Cell.Dir dir) {
+        this.dir = dir;
     }
 }

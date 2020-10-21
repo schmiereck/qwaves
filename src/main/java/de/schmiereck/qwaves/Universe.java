@@ -204,7 +204,7 @@ public class Universe {
         });
     }
 
-    public Cell.Dir calcOtherDir(final Cell.Dir dir) {
+    public static Cell.Dir calcOtherDir(final Cell.Dir dir) {
         final Cell.Dir retDir;
         switch (dir) {
             case Left -> {
