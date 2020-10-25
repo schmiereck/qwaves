@@ -1,6 +1,9 @@
 package de.schmiereck.qwaves;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class ProbabilityCalcTest {
 
@@ -19,87 +22,52 @@ public class ProbabilityCalcTest {
     @org.junit.jupiter.api.Test
     void calc50() {
         // arrange
+        final String expected1 = "1.1.";
         final ProbabilityCalc probabilityCalc = new ProbabilityCalc(50);
 
         // assert
-        assertTrue(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());
-        assertTrue(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());
+        assertProbability(expected1, probabilityCalc);
     }
 
     @org.junit.jupiter.api.Test
     void calc20() {
         // arrange
+        //                        012345678901234567890123
+        final String expected1 = "1.....1.....1.....1.....";
         final ProbabilityCalc probabilityCalc = new ProbabilityCalc(20);
 
         // assert
-        assertTrue(probabilityCalc.calcTick()); // 0
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());
-        assertTrue(probabilityCalc.calcTick()); // 6
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());    // 11
-        assertTrue(probabilityCalc.calcTick());    // 12
+        assertProbability(expected1, probabilityCalc);
     }
 
     @org.junit.jupiter.api.Test
     void calc10() {
         // arrange
+        //                        012345678901234567890123
+        final String expected1 = "1...........1...........";
         final ProbabilityCalc probabilityCalc = new ProbabilityCalc(10);
 
         // assert
-        assertTrue(probabilityCalc.calcTick()); // 0
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick()); // 6
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());    // 11
-        assertTrue(probabilityCalc.calcTick());    // 12
+        assertProbability(expected1, probabilityCalc);
     }
 
     @org.junit.jupiter.api.Test
     void calc40() {
         // arrange
+        //                        012345678901234567890123
+        final String expected1 = "1..1..1..1..1.1.1.1.1.1.";
         final ProbabilityCalc probabilityCalc = new ProbabilityCalc(40);
 
         // assert
-        assertTrue(probabilityCalc.calcTick()); // 0
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());
-        assertTrue(probabilityCalc.calcTick()); // 3
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());
-        assertTrue(probabilityCalc.calcTick()); // 6
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());
-        assertTrue(probabilityCalc.calcTick()); // 9
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());    // 11
-        assertTrue(probabilityCalc.calcTick());    // 12, 0
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());
-        assertTrue(probabilityCalc.calcTick()); // 15, 3
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());
-        assertTrue(probabilityCalc.calcTick()); // 18, 6
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());
-        assertTrue(probabilityCalc.calcTick()); // 21, 9
-        assertFalse(probabilityCalc.calcTick());
-        assertFalse(probabilityCalc.calcTick());    // 23, 11
-        assertTrue(probabilityCalc.calcTick()); // 24, 0
+        assertProbability(expected1, probabilityCalc);
+    }
+
+    private void assertProbability(final String expected1, final ProbabilityCalc probabilityCalc) {
+        final AtomicInteger pos = new AtomicInteger();
+        expected1.chars().forEach(c -> {
+            final boolean b = probabilityCalc.calcTick();
+            if (c == '1') assertTrue(b, String.format("On position \"%s\".", pos)); else assertFalse(b, String.format("On position \"%s\".", pos));
+            pos.getAndIncrement();
+        });
     }
 }
