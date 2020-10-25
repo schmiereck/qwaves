@@ -10,7 +10,7 @@ public class ProbabilityCalcTest {
     @org.junit.jupiter.api.Test
     void calc100() {
         // arrange
-        final ProbabilityCalc probabilityCalc = new ProbabilityCalc(100);
+        final ProbabilityCalc probabilityCalc = new ProbabilityCalc(12, 100, 100);
 
         // assert
         assertTrue(probabilityCalc.calcTick());
@@ -23,7 +23,7 @@ public class ProbabilityCalcTest {
     void calc50() {
         // arrange
         final String expected1 = "1.1.";
-        final ProbabilityCalc probabilityCalc = new ProbabilityCalc(50);
+        final ProbabilityCalc probabilityCalc = new ProbabilityCalc(12, 100, 50);
 
         // assert
         assertProbability(expected1, probabilityCalc);
@@ -34,7 +34,7 @@ public class ProbabilityCalcTest {
         // arrange
         //                        012345678901234567890123
         final String expected1 = "1.....1.....1.....1.....";
-        final ProbabilityCalc probabilityCalc = new ProbabilityCalc(20);
+        final ProbabilityCalc probabilityCalc = new ProbabilityCalc(12, 100, 20);
 
         // assert
         assertProbability(expected1, probabilityCalc);
@@ -45,7 +45,7 @@ public class ProbabilityCalcTest {
         // arrange
         //                        012345678901234567890123
         final String expected1 = "1...........1...........";
-        final ProbabilityCalc probabilityCalc = new ProbabilityCalc(10);
+        final ProbabilityCalc probabilityCalc = new ProbabilityCalc(12, 100, 10);
 
         // assert
         assertProbability(expected1, probabilityCalc);
@@ -64,10 +64,11 @@ public class ProbabilityCalcTest {
         final String expected1 =
         //       012345678901     234567890123456
         //       012345678901     012345678901     012345678901     012345678901
-                "1..1..1..1.." + "1.1.1.1.1.1." + "1.1.1.1.1.1." + "1.1.1.1.1.1." + "1.1.1.1.1.1." + "1..1..1..1.." +
-                "1.1.1.1.1.1." + "1.1.1.1.1.1." + "1.1.1.1.1.1." + "1.1.1.1.1.1." + "1..1..1..1.." + "1.1.1.1.1.1." +
-                "1.1.1.1.1.1." + "1.1.1.1.1.1." + "1.1.1.1.1.1." + "1.1.1.1.1.1." + "1.1.1.1.1.1." + "1.1.1.1.1.1.";
-        final ProbabilityCalc probabilityCalc = new ProbabilityCalc(40);
+                "1..1..1..1.." + "1.1.1.1.1.1." + "1.1.1.1.1.1." + "1.1.1.1.1.1." + "1.1.1.1.1.1." +
+                "1..1..1..1.." + "1.1.1.1.1.1." + "1.1.1.1.1.1." + "1.1.1.1.1.1." + "1.1.1.1.1.1." +
+                "1..1..1..1.." + "1.1.1.1.1.1." + "1.1.1.1.1.1." + "1.1.1.1.1.1." + "1.1.1.1.1.1." +
+                "1..1..1..1.." + "1.1.1.1.1.1." + "1.1.1.1.1.1." + "1.1.1.1.1.1." + "1.1.1.1.1.1.";
+        final ProbabilityCalc probabilityCalc = new ProbabilityCalc(12, 100, 40);
 
         // assert
         assertProbability(expected1, probabilityCalc);

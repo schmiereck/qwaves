@@ -6,8 +6,8 @@ public class Wave {
     private final Event event;
     private Cell cell;
     private Cell targetCell;
-    private int calcState = 0;
     private Cell.Dir dir = null;
+    private final ProbabilityCalc placePulseProbCalc = new ProbabilityCalc(12, 100, 50);
 
     private boolean extendCalculated = false;
 
@@ -40,30 +40,40 @@ public class Wave {
     }
 
     public int getCalcState() {
-        return this.calcState;
-    }
-
-    public void setCalcState(final int calcState) {
-        this.calcState = calcState;
+        final int calcState;
+        if (this.placePulseProbCalc.getExecute()) {
+            calcState = 0;
+        } else {
+            calcState = 1;
+        }
+        return calcState;
     }
 
     public Wave createWave() {
-        final Wave wave = createWave(this.dir, this.calcState);
+        final Wave wave = createWave(this.dir, this.placePulseProbCalc);
         this.event.addWave(wave);
         return wave;
     }
 
     public Wave createWave(final Cell.Dir dir) {
-        final Wave wave = createWave(dir, this.calcState);
+        final Wave wave = createWave(dir, this.placePulseProbCalc);
         this.event.addWave(wave);
         return wave;
     }
 
-    public Wave createWave(final Cell.Dir dir, final int calcState) {
+    public Wave createWave(final Cell.Dir dir, final ProbabilityCalc placePulseProbCalc) {
         final Wave wave = new Wave(this.event);
         wave.setDir(dir);
-        wave.setCalcState(calcState);
+        wave.setPlacePulseProbCalc(placePulseProbCalc);
         return wave;
+    }
+
+    private void setPlacePulseProbCalc(final ProbabilityCalc placePulseProbCalc) {
+        this.placePulseProbCalc.copy(placePulseProbCalc);
+    }
+
+    public void calcPlacePulseProbCalc() {
+        this.placePulseProbCalc.calcTick();
     }
 
     public Cell.Dir getDir() {

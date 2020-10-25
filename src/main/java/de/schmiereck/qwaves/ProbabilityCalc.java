@@ -2,8 +2,8 @@ package de.schmiereck.qwaves;
 
 public class ProbabilityCalc {
     // Init:
-    public int base = 100;
-    public int range = 12;
+    public int valueRange = 12;
+    public int probabilityBase = 100;
     public int probability;
     public int targetProbRange;
 
@@ -17,10 +17,29 @@ public class ProbabilityCalc {
     public int tickPos = 0;
     public int rangePos;
     public int posInRange;
+    private boolean execute = false;
 
-    public ProbabilityCalc(final int probability) {
+    public ProbabilityCalc(final int valueRange, final int probabilityBase, final int probability) {
+        this.valueRange = valueRange;
+        this.probabilityBase = probabilityBase;
         this.probability = probability;
-        this.targetProbRange = this.probability * this.range;
+        this.targetProbRange = this.probability * this.valueRange;
+    }
+
+    public void copy(final ProbabilityCalc probCalc) {
+        // Init:
+        this.valueRange = probCalc.valueRange;
+        this.probabilityBase = probCalc.probabilityBase;
+        this.probability = probCalc.probability;
+        this.targetProbRange = probCalc.targetProbRange;
+        // Range-Runtime:
+        this.stepTicks = probCalc.stepTicks;
+        this.remainsProbRange = probCalc.remainsProbRange;
+        // Tick-Runtime:
+        this.tickPos = probCalc.tickPos;
+        this.rangePos = probCalc.rangePos;
+        this.posInRange = probCalc.posInRange;
+        this.execute = probCalc.execute;
     }
 
     private void initNextRange() {
@@ -43,28 +62,28 @@ public class ProbabilityCalc {
         // 5: 480%=40%*12+0%	4=480%/100%	3=12/4	400%=4*100%	80%=480%-400%
 
         // xx%: 1200=100%*12
-        final int maxPropRange = this.base * this.range;
+        final int maxPropRange = this.probabilityBase * this.valueRange;
         // 30%: 360%=30%*12
         // 40%: 480%=40%*12
         // 50%: 600%=50%*12
         // 60%: 720%=60%*12
-        final int propRange = this.probability * this.range + this.remainsProbRange;
+        final int propRange = this.probability * this.valueRange + this.remainsProbRange;
         // 30%: 3=360%/100%
         // 40%: 4=480%/100% 5=560%/100%
         // 50%: 6=600%/100%
         // 60%: 7=720%/100%
-        final int countPerRange = (propRange) / this.base;
+        final int countPerRange = (propRange) / this.probabilityBase;
         // 30%: (4=12/3)
         // 40%: (3=12/4)    2=12/5
         // 50%: (2=12/6)
         // 60%: (1=12/7)
-        this.stepTicks = this.range / countPerRange;
+        this.stepTicks = this.valueRange / countPerRange;
 
         // 30%: 300=3*100
         // 40%: 400=4*100   500=5*100
         // 50%: 600=6*100
         // 60%: 700=7*100
-        final int realPropRange = countPerRange * this.base;
+        final int realPropRange = countPerRange * this.probabilityBase;
         // 30%: 60=360-300;
         // 40%: 80=480-400; -20=480-500
         // 50%: 0=600-600;
@@ -73,10 +92,8 @@ public class ProbabilityCalc {
     }
 
     public boolean calcTick() {
-        final boolean ret;
-
-        this.rangePos = this.tickPos / this.range;
-        this.posInRange = this.tickPos % this.range;
+        this.rangePos = this.tickPos / this.valueRange;
+        this.posInRange = this.tickPos % this.valueRange;
 
         if (this.posInRange == 0) {
             initNextRange();
@@ -85,13 +102,17 @@ public class ProbabilityCalc {
         final int stepPos = this.tickPos % this.stepTicks;
 
         if (stepPos == 0) {
-            ret = true;
+            this.execute = true;
         } else {
-            ret = false;
+            this.execute = false;
         }
 
         this.tickPos++;
 
-        return ret;
+        return this.execute;
+    }
+
+    public boolean getExecute() {
+        return this.execute;
     }
 }

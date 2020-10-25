@@ -47,10 +47,8 @@ public class Engine {
                             if (sourceEvent.getEventType() == 1) {
                                 final int calcState = sourceWave.getCalcState();
                                 switch (calcState) {
-                                    case 0 ->  // Extend:
-                                        calcExtend(spacePos, cellPos, sourceCell, sourceWave, calcDir);
-                                    case 1 ->  // Move:
-                                        calcMove(spacePos, cellPos, sourceCell, sourceWave, calcDir);
+                                    case 0 ->  calcExtend(spacePos, cellPos, sourceCell, sourceWave, calcDir);
+                                    case 1 ->  calcMove(spacePos, cellPos, sourceCell, sourceWave, calcDir);
                                     default -> throw new IllegalStateException("Unexpected calcState value: " + calcState);
                                 }
                             }
