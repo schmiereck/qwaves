@@ -13,8 +13,8 @@ public class Event {
         this.eventType = eventType;
     }
 
-    public Wave createWave() {
-        final Wave wave = new Wave(this);
+    public Wave createWave(final int placePulseProb) {
+        final Wave wave = new Wave(this, placePulseProb);
         this.addWave(wave);
         return wave;
     }

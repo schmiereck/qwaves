@@ -28,7 +28,7 @@ public class Main {
         // Extend Test:
         {
             final Event particleEvent = new Event(engine, 1);
-            final Wave wave = particleEvent.createWave();
+            final Wave wave = particleEvent.createWave(100);
             universe.addEvent(0, 0, 8, particleEvent);
 
             // For Testing:
@@ -42,9 +42,9 @@ public class Main {
         // Move Test:
         {
             final Event particleEvent = new Event(engine, 1);
-            final Wave wave = particleEvent.createWave();
+            final Wave wave = particleEvent.createWave(0);
             wave.setDir(Cell.Dir.Right);
-            wave.setCalcState(1);
+            //wave.setCalcState(1);
             universe.addEvent(0, 0, 16, particleEvent);
 
             // For Testing:
@@ -62,7 +62,7 @@ public class Main {
         final boolean showSpaceCells = true;
         final boolean showReality = true;
         long runNr = 0;
-        while (runNr < 4) {
+        while (runNr < 7) {
             System.out.println("----------------------------------------------------------------------------------------------------");
             if (showSpaceCells) {
                 for (int spacePos = spaceSize - 1; spacePos >= 0; spacePos--) {

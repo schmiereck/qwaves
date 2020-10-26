@@ -8,15 +8,31 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 public class ProbabilityCalcTest {
 
     @org.junit.jupiter.api.Test
+    void calc0() {
+        // arrange
+        final String expected1 =
+        //       012345678901     234567890123456
+        //       012345678901     012345678901     012345678901     012345678901
+                "............" + "............" + "............" + "............" + "............" +
+                "............" + "............" + "............" + "............" + "............";
+        final ProbabilityCalc probabilityCalc = new ProbabilityCalc(12, 100, 0);
+
+        // assert
+        assertProbability(expected1, probabilityCalc);
+    }
+
+    @org.junit.jupiter.api.Test
     void calc100() {
         // arrange
+        final String expected1 =
+        //       012345678901     234567890123456
+        //       012345678901     012345678901     012345678901     012345678901
+                "111111111111" + "111111111111" + "111111111111" + "111111111111" + "111111111111" +
+                "111111111111" + "111111111111" + "111111111111" + "111111111111" + "111111111111";
         final ProbabilityCalc probabilityCalc = new ProbabilityCalc(12, 100, 100);
 
         // assert
-        assertTrue(probabilityCalc.calcTick());
-        assertTrue(probabilityCalc.calcTick());
-        assertTrue(probabilityCalc.calcTick());
-        assertTrue(probabilityCalc.calcTick());
+        assertProbability(expected1, probabilityCalc);
     }
 
     @org.junit.jupiter.api.Test
@@ -77,8 +93,9 @@ public class ProbabilityCalcTest {
     private void assertProbability(final String expected1, final ProbabilityCalc probabilityCalc) {
         final AtomicInteger pos = new AtomicInteger();
         expected1.chars().forEach(c -> {
-            final boolean b = probabilityCalc.calcTick();
+            final boolean b = probabilityCalc.getExecute();
             if (c == '1') assertTrue(b, String.format("On position \"%s\" (rangePos:%d, posInRange:%d).", pos, probabilityCalc.rangePos, probabilityCalc.posInRange)); else assertFalse(b, String.format("On position \"%s\" (rangePos:%d, posInRange:%d).", pos, probabilityCalc.rangePos, probabilityCalc.posInRange));
+            probabilityCalc.calcNextTick();
             pos.getAndIncrement();
         });
     }

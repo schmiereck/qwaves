@@ -24,9 +24,14 @@ public class ProbabilityCalc {
         this.probabilityBase = probabilityBase;
         this.probability = probability;
         this.targetProbRange = this.probability * this.valueRange;
+
+        this.calcTickState();
     }
 
-    public void copy(final ProbabilityCalc probCalc) {
+    /**
+     * Copy and calc next Probability-Tick-Pos.
+     */
+    public ProbabilityCalc(final ProbabilityCalc probCalc) {
         // Init:
         this.valueRange = probCalc.valueRange;
         this.probabilityBase = probCalc.probabilityBase;
@@ -40,6 +45,35 @@ public class ProbabilityCalc {
         this.rangePos = probCalc.rangePos;
         this.posInRange = probCalc.posInRange;
         this.execute = probCalc.execute;
+
+        this.calcNextTick();
+    }
+
+    public void calcTickState() {
+        this.rangePos = this.tickPos / this.valueRange;
+        this.posInRange = this.tickPos % this.valueRange;
+
+        if (this.posInRange == 0) {
+            initNextRange();
+        }
+
+        if (this.stepTicks != 0) {
+            final int stepPos = this.tickPos % this.stepTicks;
+
+            if (stepPos == 0) {
+                this.execute = true;
+            } else {
+                this.execute = false;
+            }
+        } else {
+            this.execute = false;
+        }
+    }
+
+    public void calcNextTick() {
+        this.tickPos++;
+
+        this.calcTickState();
     }
 
     private void initNextRange() {
@@ -77,8 +111,11 @@ public class ProbabilityCalc {
         // 40%: (3=12/4)    2=12/5
         // 50%: (2=12/6)
         // 60%: (1=12/7)
-        this.stepTicks = this.valueRange / countPerRange;
-
+        if (countPerRange != 0) {
+            this.stepTicks = this.valueRange / countPerRange;
+        } else {
+            this.stepTicks = 0;
+        }
         // 30%: 300=3*100
         // 40%: 400=4*100   500=5*100
         // 50%: 600=6*100
@@ -89,27 +126,6 @@ public class ProbabilityCalc {
         // 50%: 0=600-600;
         // 60%: 20=720-700;
         this.remainsProbRange = this.targetProbRange - realPropRange + this.remainsProbRange;
-    }
-
-    public boolean calcTick() {
-        this.rangePos = this.tickPos / this.valueRange;
-        this.posInRange = this.tickPos % this.valueRange;
-
-        if (this.posInRange == 0) {
-            initNextRange();
-        }
-
-        final int stepPos = this.tickPos % this.stepTicks;
-
-        if (stepPos == 0) {
-            this.execute = true;
-        } else {
-            this.execute = false;
-        }
-
-        this.tickPos++;
-
-        return this.execute;
     }
 
     public boolean getExecute() {

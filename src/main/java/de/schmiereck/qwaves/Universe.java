@@ -200,7 +200,7 @@ public class Universe {
     public void addBariere(final Event event, final int cellPos, final Cell.Dir dir) {
         IntStream.range(0, this.spaceSize).forEach((spacePos) -> {
             final Cell cell = this.getSpaceCell(spacePos, cellPos, dir);
-            cell.addWave(event.createWave());
+            cell.addWave(event.createWave(100));
         });
     }
 

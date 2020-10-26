@@ -1,18 +1,25 @@
 package de.schmiereck.qwaves;
 
-import java.util.List;
-
 public class Wave {
     private final Event event;
     private Cell cell;
     private Cell targetCell;
     private Cell.Dir dir = null;
-    private final ProbabilityCalc placePulseProbCalc = new ProbabilityCalc(12, 100, 50);
+    private final ProbabilityCalc placePulseProbCalc;
 
     private boolean extendCalculated = false;
 
-    public Wave(final Event event) {
+    public Wave(final Event event, final int placePulseProb) {
         this.event = event;
+        this.placePulseProbCalc = new ProbabilityCalc(12, 100, placePulseProb);
+    }
+
+    /**
+     * Copy and calc next Probability-Tick-Pos.
+     */
+    public Wave(final Event event, final ProbabilityCalc placePulseProbCalc) {
+        this.event = event;
+        this.placePulseProbCalc = new ProbabilityCalc(placePulseProbCalc);
     }
 
     public void setCell(final Cell cell) {
@@ -61,19 +68,13 @@ public class Wave {
         return wave;
     }
 
+    /**
+     * Copy and calc next Probability-Tick-Pos.
+     */
     public Wave createWave(final Cell.Dir dir, final ProbabilityCalc placePulseProbCalc) {
-        final Wave wave = new Wave(this.event);
+        final Wave wave = new Wave(this.event, placePulseProbCalc);
         wave.setDir(dir);
-        wave.setPlacePulseProbCalc(placePulseProbCalc);
         return wave;
-    }
-
-    private void setPlacePulseProbCalc(final ProbabilityCalc placePulseProbCalc) {
-        this.placePulseProbCalc.copy(placePulseProbCalc);
-    }
-
-    public void calcPlacePulseProbCalc() {
-        this.placePulseProbCalc.calcTick();
     }
 
     public Cell.Dir getDir() {
